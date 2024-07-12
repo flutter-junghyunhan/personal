@@ -47,10 +47,14 @@ class PostBloc extends Bloc<PostEvent, PostState> {
         final posts = await _fetchPosts(state.posts.length);
         emit(posts.isEmpty
             ? state.copyWith(hasReachedMax: true)
-            : state.copyWith());
+            : state.copyWith(
+                status: PostStatus.success,
+                posts: List.of(state.posts)..addAll(posts),
+                hasReachedMax: false,
+              ));
       }
     } catch (_) {
-      emit(state.copyWith(status: PostStatus.faillure));
+      emit(state.copyWith(status: PostStatus.failure));
     }
   }
 
@@ -59,7 +63,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       Uri.https(
         'jsonplaceholder.typicode.com',
         '/posts',
-        <String, String>{'_start': '$startIndex', 'limit': '$_postLimit'},
+        <String, String>{'_start': '$startIndex', '_limit': '$_postLimit'},
       ),
     );
     if (response.statusCode == 200) {
