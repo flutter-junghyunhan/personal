@@ -1,6 +1,6 @@
 part of 'post_bloc.dart';
 
-enum PostStatus { initial, success, faillure }
+enum PostStatus { initial, success, failure }
 
 final class PostState extends Equatable {
   const PostState({
